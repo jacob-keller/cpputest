@@ -27,6 +27,7 @@
 
 #include "CppUTest/TestHarness.h"
 #include "MockFailureReporterForTest.h"
+#include <climits>
 
 TEST_GROUP(MockReturnValueTest)
 {
@@ -103,6 +104,34 @@ TEST(MockReturnValueTest, UnsignedIntReturnValueCanBeRetrievedAsUnsignedLongInt)
     unsigned int expected_value = 7;
     mock().expectOneCall("foo").andReturnValue(expected_value);
     UNSIGNED_LONGS_EQUAL(expected_value, mock().actualCall("foo").returnValue().getUnsignedLongIntValue());
+}
+
+TEST(MockReturnValueTest, PositiveIntReturnValueCanBeRetrievedAsUnsignedLongLongInt)
+{
+    int expected_value = 7;
+    mock().expectOneCall("foo").andReturnValue(expected_value);
+    UNSIGNED_LONGLONGS_EQUAL(expected_value, mock().actualCall("foo").returnValue().getUnsignedLongLongIntValue());
+}
+
+TEST(MockReturnValueTest, PositiveLongIntReturnValueCanBeRetrievedAsUnsignedLongLongInt)
+{
+    long int expected_value = 7;
+    mock().expectOneCall("foo").andReturnValue(expected_value);
+    UNSIGNED_LONGLONGS_EQUAL(expected_value, mock().actualCall("foo").returnValue().getUnsignedLongLongIntValue());
+}
+
+TEST(MockReturnValueTest, UnsignedIntReturnValueCanBeRetrievedAsUnsignedLongLongInt)
+{
+    unsigned int expected_value = 7;
+    mock().expectOneCall("foo").andReturnValue(expected_value);
+    UNSIGNED_LONGLONGS_EQUAL(expected_value, mock().actualCall("foo").returnValue().getUnsignedLongLongIntValue());
+}
+
+TEST(MockReturnValueTest, UnsignedLongLongIntReturnValueCanBeRetrieved)
+{
+    unsigned long long int expected_value = ULLONG_MAX;
+    mock().expectOneCall("foo").andReturnValue(expected_value);
+    UNSIGNED_LONGLONGS_EQUAL(expected_value, mock().actualCall("foo").returnValue().getUnsignedLongLongIntValue());
 }
 
 TEST(MockReturnValueTest, UnsignedIntegerReturnValueSetsDifferentValues)

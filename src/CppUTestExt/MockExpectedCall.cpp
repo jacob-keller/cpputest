@@ -125,6 +125,22 @@ MockExpectedCall& MockCheckedExpectedCall::withUnsignedLongIntParameter(const Si
     return *this;
 }
 
+MockExpectedCall& MockCheckedExpectedCall::withLongLongIntParameter(const SimpleString& name, long long int value)
+{
+    MockNamedValue* newParameter = new MockExpectedFunctionParameter(name);
+    inputParameters_->add(newParameter);
+    newParameter->setValue(value);
+    return *this;
+}
+
+MockExpectedCall& MockCheckedExpectedCall::withUnsignedLongLongIntParameter(const SimpleString& name, unsigned long long int value)
+{
+    MockNamedValue* newParameter = new MockExpectedFunctionParameter(name);
+    inputParameters_->add(newParameter);
+    newParameter->setValue(value);
+    return *this;
+}
+
 MockExpectedCall& MockCheckedExpectedCall::withDoubleParameter(const SimpleString& name, double value)
 {
     MockNamedValue* newParameter = new MockExpectedFunctionParameter(name);
@@ -461,6 +477,20 @@ MockExpectedCall& MockCheckedExpectedCall::andReturnValue(long int value)
 }
 
 MockExpectedCall& MockCheckedExpectedCall::andReturnValue(unsigned long int value)
+{
+    returnValue_.setName("returnValue");
+    returnValue_.setValue(value);
+    return *this;
+}
+
+MockExpectedCall& MockCheckedExpectedCall::andReturnValue(long long int value)
+{
+    returnValue_.setName("returnValue");
+    returnValue_.setValue(value);
+    return *this;
+}
+
+MockExpectedCall& MockCheckedExpectedCall::andReturnValue(unsigned long long int value)
 {
     returnValue_.setName("returnValue");
     returnValue_.setValue(value);

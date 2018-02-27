@@ -227,6 +227,28 @@ TEST(MockExpectedCall, callWithLongIntegerParameter)
     STRCMP_CONTAINS("funcName -> long int paramName: <777 (0x309)>", call->callToString().asCharString());
 }
 
+TEST(MockExpectedCall, callWithUnsignedLongLongIntegerParameter)
+{
+    const SimpleString paramName = "paramName";
+    unsigned long long value = 888;
+    call->withParameter(paramName, value);
+    STRCMP_EQUAL("unsigned long long int", call->getInputParameterType(paramName).asCharString());
+    UNSIGNED_LONGLONGS_EQUAL(value, call->getInputParameter(paramName).getUnsignedLongLongIntValue());
+    CHECK(call->hasInputParameterWithName(paramName));
+    STRCMP_CONTAINS("funcName -> unsigned long long int paramName: <888 (0x378)>", call->callToString().asCharString());
+}
+
+TEST(MockExpectedCall, callWithLongLongIntegerParameter)
+{
+    const SimpleString paramName = "paramName";
+    long long value = 777;
+    call->withParameter(paramName, value);
+    STRCMP_EQUAL("long long int", call->getInputParameterType(paramName).asCharString());
+    LONGLONGS_EQUAL(value, call->getInputParameter(paramName).getLongLongIntValue());
+    CHECK(call->hasInputParameterWithName(paramName));
+    STRCMP_CONTAINS("funcName -> long long int paramName: <777 (0x309)>", call->callToString().asCharString());
+}
+
 TEST(MockExpectedCall, callWithDoubleParameter)
 {
     const SimpleString paramName = "paramName";
