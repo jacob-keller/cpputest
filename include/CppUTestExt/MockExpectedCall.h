@@ -28,15 +28,18 @@
 #ifndef D_MockExpectedCall_h
 #define D_MockExpectedCall_h
 
+#include "CppUTest/CppUTestConfig.h"
+
 class MockNamedValue;
+class MockExpectedCall;
 
 extern SimpleString StringFrom(const MockNamedValue& parameter);
 
-class MockExpectedCall
+class MockExpectedCallBase
 {
 public:
-    MockExpectedCall();
-    virtual ~MockExpectedCall();
+    MockExpectedCallBase();
+    virtual ~MockExpectedCallBase();
 
     virtual MockExpectedCall& withName(const SimpleString& name)=0;
     virtual MockExpectedCall& withCallOrder(unsigned int)=0;
@@ -46,8 +49,6 @@ public:
     MockExpectedCall& withParameter(const SimpleString& name, unsigned int value) { return withUnsignedIntParameter(name, value); }
     MockExpectedCall& withParameter(const SimpleString& name, long int value) { return withLongIntParameter(name, value); }
     MockExpectedCall& withParameter(const SimpleString& name, unsigned long int value) { return withUnsignedLongIntParameter(name, value); }
-    MockExpectedCall& withParameter(const SimpleString& name, long long int value) { return withLongLongIntParameter(name, value); }
-    MockExpectedCall& withParameter(const SimpleString& name, unsigned long long int value) { return withUnsignedLongLongIntParameter(name, value); }
     MockExpectedCall& withParameter(const SimpleString& name, double value) { return withDoubleParameter(name, value); }
     MockExpectedCall& withParameter(const SimpleString& name, const char* value) { return withStringParameter(name, value); }
     MockExpectedCall& withParameter(const SimpleString& name, void* value) { return withPointerParameter(name, value); }
@@ -64,8 +65,6 @@ public:
     virtual MockExpectedCall& withUnsignedIntParameter(const SimpleString& name, unsigned int value)=0;
     virtual MockExpectedCall& withLongIntParameter(const SimpleString& name, long int value)=0;
     virtual MockExpectedCall& withUnsignedLongIntParameter(const SimpleString& name, unsigned long int value)=0;
-    virtual MockExpectedCall& withLongLongIntParameter(const SimpleString& name, long long int value)=0;
-    virtual MockExpectedCall& withUnsignedLongLongIntParameter(const SimpleString& name, unsigned long long int value)=0;
     virtual MockExpectedCall& withDoubleParameter(const SimpleString& name, double value)=0;
     virtual MockExpectedCall& withStringParameter(const SimpleString& name, const char* value)=0;
     virtual MockExpectedCall& withPointerParameter(const SimpleString& name, void* value)=0;
@@ -77,8 +76,6 @@ public:
     virtual MockExpectedCall& andReturnValue(unsigned int value)=0;
     virtual MockExpectedCall& andReturnValue(long int value)=0;
     virtual MockExpectedCall& andReturnValue(unsigned long int value)=0;
-    virtual MockExpectedCall& andReturnValue(long long int value)=0;
-    virtual MockExpectedCall& andReturnValue(unsigned long long int value)=0;
     virtual MockExpectedCall& andReturnValue(double value)=0;
     virtual MockExpectedCall& andReturnValue(const char* value)=0;
     virtual MockExpectedCall& andReturnValue(void* value)=0;
@@ -86,6 +83,64 @@ public:
     virtual MockExpectedCall& andReturnValue(void (*value)())=0;
 
     virtual MockExpectedCall& onObject(void* objectPtr)=0;
+};
+
+#if CPPUTEST_USE_LONG_LONG == 1
+
+class MockExpectedCallExtended : public MockExpectedCallBase
+{
+public:
+    MockExpectedCallExtended();
+    virtual ~MockExpectedCallExtended();
+
+    // These functions have to be repeated from parent class to avoid hiding them with new overloads
+    MockExpectedCall& withParameter(const SimpleString& name, bool value) { return withBoolParameter(name, value); }
+    MockExpectedCall& withParameter(const SimpleString& name, int value) { return withIntParameter(name, value); }
+    MockExpectedCall& withParameter(const SimpleString& name, unsigned int value) { return withUnsignedIntParameter(name, value); }
+    MockExpectedCall& withParameter(const SimpleString& name, long int value) { return withLongIntParameter(name, value); }
+    MockExpectedCall& withParameter(const SimpleString& name, unsigned long int value) { return withUnsignedLongIntParameter(name, value); }
+    MockExpectedCall& withParameter(const SimpleString& name, double value) { return withDoubleParameter(name, value); }
+    MockExpectedCall& withParameter(const SimpleString& name, const char* value) { return withStringParameter(name, value); }
+    MockExpectedCall& withParameter(const SimpleString& name, void* value) { return withPointerParameter(name, value); }
+    MockExpectedCall& withParameter(const SimpleString& name, const void* value) { return withConstPointerParameter(name, value); }
+    MockExpectedCall& withParameter(const SimpleString& name, void (*value)()) { return withFunctionPointerParameter(name, value); }
+    MockExpectedCall& withParameter(const SimpleString& name, const unsigned char* value, size_t size) { return withMemoryBufferParameter(name, value, size); }
+
+    // New overloads
+    MockExpectedCall& withParameter(const SimpleString& name, long long int value) { return withLongLongIntParameter(name, value); }
+    MockExpectedCall& withParameter(const SimpleString& name, unsigned long long int value) { return withUnsignedLongLongIntParameter(name, value); }
+
+    virtual MockExpectedCall& withLongLongIntParameter(const SimpleString& name, long long int value)=0;
+    virtual MockExpectedCall& withUnsignedLongLongIntParameter(const SimpleString& name, unsigned long long int value)=0;
+
+    // These functions have to be repeated from parent class to avoid hiding them with new overloads
+    virtual MockExpectedCall& andReturnValue(bool value)=0;
+    virtual MockExpectedCall& andReturnValue(int value)=0;
+    virtual MockExpectedCall& andReturnValue(unsigned int value)=0;
+    virtual MockExpectedCall& andReturnValue(long int value)=0;
+    virtual MockExpectedCall& andReturnValue(unsigned long int value)=0;
+    virtual MockExpectedCall& andReturnValue(double value)=0;
+    virtual MockExpectedCall& andReturnValue(const char* value)=0;
+    virtual MockExpectedCall& andReturnValue(void* value)=0;
+    virtual MockExpectedCall& andReturnValue(const void* value)=0;
+    virtual MockExpectedCall& andReturnValue(void (*value)())=0;
+
+    // New overloads
+    virtual MockExpectedCall& andReturnValue(long long int value)=0;
+    virtual MockExpectedCall& andReturnValue(unsigned long long int value)=0;
+};
+
+#endif
+
+#if CPPUTEST_USE_LONG_LONG == 1
+class MockExpectedCall : public MockExpectedCallExtended
+#else
+class MockExpectedCall : public MockExpectedCallBase
+#endif
+{
+public:
+    MockExpectedCall() {};
+    virtual ~MockExpectedCall() {};
 };
 
 #endif

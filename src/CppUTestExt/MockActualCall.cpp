@@ -31,13 +31,25 @@
 #include "CppUTestExt/MockFailure.h"
 #include "CppUTest/PlatformSpecificFunctions.h"
 
-MockActualCall::MockActualCall()
+MockActualCallBase::MockActualCallBase()
 {
 }
 
-MockActualCall::~MockActualCall()
+MockActualCallBase::~MockActualCallBase()
 {
 }
+
+#if CPPUTEST_USE_LONG_LONG == 1
+
+MockActualCallExtended::MockActualCallExtended()
+{
+}
+
+MockActualCallExtended::~MockActualCallExtended()
+{
+}
+
+#endif
 
 void MockCheckedActualCall::setName(const SimpleString& name)
 {
@@ -241,6 +253,8 @@ MockActualCall& MockCheckedActualCall::withLongIntParameter(const SimpleString& 
     return *this;
 }
 
+#if CPPUTEST_USE_LONG_LONG == 1
+
 MockActualCall& MockCheckedActualCall::withUnsignedLongLongIntParameter(const SimpleString& name, unsigned long long int value)
 {
     MockNamedValue actualParameter(name);
@@ -256,6 +270,8 @@ MockActualCall& MockCheckedActualCall::withLongLongIntParameter(const SimpleStri
     checkInputParameter(actualParameter);
     return *this;
 }
+
+#endif
 
 MockActualCall& MockCheckedActualCall::withDoubleParameter(const SimpleString& name, double value)
 {
@@ -454,6 +470,8 @@ long int MockCheckedActualCall::returnLongIntValueOrDefault(long int default_val
     return returnLongIntValue();
 }
 
+#if CPPUTEST_USE_LONG_LONG == 1
+
 unsigned long long int MockCheckedActualCall::returnUnsignedLongLongIntValue()
 {
     return returnValue().getUnsignedLongLongIntValue();
@@ -479,6 +497,8 @@ long long int MockCheckedActualCall::returnLongLongIntValueOrDefault(long long i
     }
     return returnLongLongIntValue();
 }
+
+#endif
 
 double MockCheckedActualCall::returnDoubleValue()
 {
@@ -676,6 +696,8 @@ MockActualCall& MockActualCallTrace::withLongIntParameter(const SimpleString& na
     return *this;
 }
 
+#if CPPUTEST_USE_LONG_LONG == 1
+
 MockActualCall& MockActualCallTrace::withUnsignedLongLongIntParameter(const SimpleString& name, unsigned long long int value)
 {
     addParameterName(name);
@@ -689,6 +711,8 @@ MockActualCall& MockActualCallTrace::withLongLongIntParameter(const SimpleString
     traceBuffer_ += StringFrom(value) + " " + BracketsFormattedHexStringFrom(value);
     return *this;
 }
+
+#endif
 
 MockActualCall& MockActualCallTrace::withDoubleParameter(const SimpleString& name, double value)
 {
@@ -787,6 +811,8 @@ long int MockActualCallTrace::returnLongIntValueOrDefault(long int)
     return returnLongIntValue();
 }
 
+#if CPPUTEST_USE_LONG_LONG == 1
+
 long long int MockActualCallTrace::returnLongLongIntValue()
 {
     return 0;
@@ -806,6 +832,8 @@ long long int MockActualCallTrace::returnLongLongIntValueOrDefault(long long int
 {
     return returnLongLongIntValue();
 }
+
+#endif
 
 bool MockActualCallTrace::returnBoolValue()
 {
