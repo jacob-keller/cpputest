@@ -28,6 +28,7 @@
 #ifndef D_MockActualCall_h
 #define D_MockActualCall_h
 
+#include "CppUTest/CppUTestConfig.h"
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockNamedValue.h"
 #include "CppUTestExt/MockExpectedCallsList.h"
@@ -48,8 +49,8 @@ public:
     MockActualCall& withParameter(const SimpleString& name, unsigned int value) { return withUnsignedIntParameter(name, value); }
     MockActualCall& withParameter(const SimpleString& name, long int value) { return withLongIntParameter(name, value); }
     MockActualCall& withParameter(const SimpleString& name, unsigned long int value) { return withUnsignedLongIntParameter(name, value); }
-    MockActualCall& withParameter(const SimpleString& name, long long int value) { return withLongLongIntParameter(name, value); }
-    MockActualCall& withParameter(const SimpleString& name, unsigned long long int value) { return withUnsignedLongLongIntParameter(name, value); }
+    MockActualCall& withParameter(const SimpleString& name, cpputest_longlong value) { return withLongLongIntParameter(name, value); }
+    MockActualCall& withParameter(const SimpleString& name, cpputest_ulonglong value) { return withUnsignedLongLongIntParameter(name, value); }
     MockActualCall& withParameter(const SimpleString& name, double value) { return withDoubleParameter(name, value); }
     MockActualCall& withParameter(const SimpleString& name, const char* value) { return withStringParameter(name, value); }
     MockActualCall& withParameter(const SimpleString& name, void* value) { return withPointerParameter(name, value); }
@@ -65,8 +66,8 @@ public:
     virtual MockActualCall& withUnsignedIntParameter(const SimpleString& name, unsigned int value)=0;
     virtual MockActualCall& withLongIntParameter(const SimpleString& name, long int value)=0;
     virtual MockActualCall& withUnsignedLongIntParameter(const SimpleString& name, unsigned long int value)=0;
-    virtual MockActualCall& withLongLongIntParameter(const SimpleString& name, long long int value)=0;
-    virtual MockActualCall& withUnsignedLongLongIntParameter(const SimpleString& name, unsigned long long int value)=0;
+    virtual MockActualCall& withLongLongIntParameter(const SimpleString& name, cpputest_longlong value)=0;
+    virtual MockActualCall& withUnsignedLongLongIntParameter(const SimpleString& name, cpputest_ulonglong value)=0;
     virtual MockActualCall& withDoubleParameter(const SimpleString& name, double value)=0;
     virtual MockActualCall& withStringParameter(const SimpleString& name, const char* value)=0;
     virtual MockActualCall& withPointerParameter(const SimpleString& name, void* value)=0;
@@ -89,11 +90,11 @@ public:
     virtual long int returnLongIntValue()=0;
     virtual long int returnLongIntValueOrDefault(long int default_value)=0;
 
-    virtual unsigned long long int returnUnsignedLongLongIntValue()=0;
-    virtual unsigned long long int returnUnsignedLongLongIntValueOrDefault(unsigned long long int default_value)=0;
+    virtual cpputest_ulonglong returnUnsignedLongLongIntValue()=0;
+    virtual cpputest_ulonglong returnUnsignedLongLongIntValueOrDefault(cpputest_ulonglong default_value)=0;
 
-    virtual long long int returnLongLongIntValue()=0;
-    virtual long long int returnLongLongIntValueOrDefault(long long int default_value)=0;
+    virtual cpputest_longlong returnLongLongIntValue()=0;
+    virtual cpputest_longlong returnLongLongIntValueOrDefault(cpputest_longlong default_value)=0;
 
     virtual unsigned int returnUnsignedIntValue()=0;
     virtual unsigned int returnUnsignedIntValueOrDefault(unsigned int default_value)=0;

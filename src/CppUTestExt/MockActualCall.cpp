@@ -241,7 +241,9 @@ MockActualCall& MockCheckedActualCall::withLongIntParameter(const SimpleString& 
     return *this;
 }
 
-MockActualCall& MockCheckedActualCall::withUnsignedLongLongIntParameter(const SimpleString& name, unsigned long long int value)
+#ifdef CPPUTEST_USE_LONG_LONG
+
+MockActualCall& MockCheckedActualCall::withUnsignedLongLongIntParameter(const SimpleString& name, cpputest_ulonglong value)
 {
     MockNamedValue actualParameter(name);
     actualParameter.setValue(value);
@@ -249,13 +251,29 @@ MockActualCall& MockCheckedActualCall::withUnsignedLongLongIntParameter(const Si
     return *this;
 }
 
-MockActualCall& MockCheckedActualCall::withLongLongIntParameter(const SimpleString& name, long long int value)
+MockActualCall& MockCheckedActualCall::withLongLongIntParameter(const SimpleString& name, cpputest_longlong value)
 {
     MockNamedValue actualParameter(name);
     actualParameter.setValue(value);
     checkInputParameter(actualParameter);
     return *this;
 }
+
+#else
+
+MockActualCall& MockCheckedActualCall::withUnsignedLongLongIntParameter(const SimpleString&, cpputest_ulonglong)
+{
+    FAIL("Unsigned Long Long type is not supported");
+    return *this;
+}
+
+MockActualCall& MockCheckedActualCall::withLongLongIntParameter(const SimpleString&, cpputest_longlong)
+{
+    FAIL("Long Long type is not supported");
+    return *this;
+}
+
+#endif
 
 MockActualCall& MockCheckedActualCall::withDoubleParameter(const SimpleString& name, double value)
 {
@@ -454,12 +472,14 @@ long int MockCheckedActualCall::returnLongIntValueOrDefault(long int default_val
     return returnLongIntValue();
 }
 
-unsigned long long int MockCheckedActualCall::returnUnsignedLongLongIntValue()
+#ifdef CPPUTEST_USE_LONG_LONG
+
+cpputest_ulonglong MockCheckedActualCall::returnUnsignedLongLongIntValue()
 {
     return returnValue().getUnsignedLongLongIntValue();
 }
 
-unsigned long long int MockCheckedActualCall::returnUnsignedLongLongIntValueOrDefault(unsigned long long int default_value)
+cpputest_ulonglong MockCheckedActualCall::returnUnsignedLongLongIntValueOrDefault(cpputest_ulonglong default_value)
 {
     if (!hasReturnValue()) {
         return default_value;
@@ -467,18 +487,46 @@ unsigned long long int MockCheckedActualCall::returnUnsignedLongLongIntValueOrDe
     return returnUnsignedLongLongIntValue();
 }
 
-long long int MockCheckedActualCall::returnLongLongIntValue()
+cpputest_longlong MockCheckedActualCall::returnLongLongIntValue()
 {
     return returnValue().getLongLongIntValue();
 }
 
-long long int MockCheckedActualCall::returnLongLongIntValueOrDefault(long long int default_value)
+cpputest_longlong MockCheckedActualCall::returnLongLongIntValueOrDefault(cpputest_longlong default_value)
 {
     if (!hasReturnValue()) {
         return default_value;
     }
     return returnLongLongIntValue();
 }
+
+#else
+
+cpputest_ulonglong MockCheckedActualCall::returnUnsignedLongLongIntValue()
+{
+    FAIL("Unsigned Long Long type is not supported");
+    return cpputest_ulonglong(0);
+}
+
+cpputest_ulonglong MockCheckedActualCall::returnUnsignedLongLongIntValueOrDefault(cpputest_ulonglong default_value)
+{
+    FAIL("Unsigned Long Long type is not supported");
+    return default_value;
+}
+
+cpputest_longlong MockCheckedActualCall::returnLongLongIntValue()
+{
+    FAIL("Long Long type is not supported");
+    return cpputest_longlong(0);
+}
+
+cpputest_longlong MockCheckedActualCall::returnLongLongIntValueOrDefault(cpputest_longlong default_value)
+{
+    FAIL("Long Long type is not supported");
+    return default_value;
+}
+
+#endif
 
 double MockCheckedActualCall::returnDoubleValue()
 {
@@ -676,19 +724,37 @@ MockActualCall& MockActualCallTrace::withLongIntParameter(const SimpleString& na
     return *this;
 }
 
-MockActualCall& MockActualCallTrace::withUnsignedLongLongIntParameter(const SimpleString& name, unsigned long long int value)
+#ifdef CPPUTEST_USE_LONG_LONG
+
+MockActualCall& MockActualCallTrace::withUnsignedLongLongIntParameter(const SimpleString& name, cpputest_ulonglong value)
 {
     addParameterName(name);
     traceBuffer_ += StringFrom(value) + " " + BracketsFormattedHexStringFrom(value);
     return *this;
 }
 
-MockActualCall& MockActualCallTrace::withLongLongIntParameter(const SimpleString& name, long long int value)
+MockActualCall& MockActualCallTrace::withLongLongIntParameter(const SimpleString& name, cpputest_longlong value)
 {
     addParameterName(name);
     traceBuffer_ += StringFrom(value) + " " + BracketsFormattedHexStringFrom(value);
     return *this;
 }
+
+#else
+
+MockActualCall& MockActualCallTrace::withUnsignedLongLongIntParameter(const SimpleString&, cpputest_ulonglong)
+{
+    FAIL("Unsigned Long Long type is not supported");
+    return *this;
+}
+
+MockActualCall& MockActualCallTrace::withLongLongIntParameter(const SimpleString&, cpputest_longlong)
+{
+    FAIL("Long Long type is not supported");
+    return *this;
+}
+
+#endif
 
 MockActualCall& MockActualCallTrace::withDoubleParameter(const SimpleString& name, double value)
 {
@@ -787,25 +853,55 @@ long int MockActualCallTrace::returnLongIntValueOrDefault(long int)
     return returnLongIntValue();
 }
 
-long long int MockActualCallTrace::returnLongLongIntValue()
+#ifdef CPPUTEST_USE_LONG_LONG
+
+cpputest_longlong MockActualCallTrace::returnLongLongIntValue()
 {
     return 0;
 }
 
-unsigned long long int MockActualCallTrace::returnUnsignedLongLongIntValue()
+cpputest_ulonglong MockActualCallTrace::returnUnsignedLongLongIntValue()
 {
     return 0;
 }
 
-unsigned long long int MockActualCallTrace::returnUnsignedLongLongIntValueOrDefault(unsigned long long)
+cpputest_ulonglong MockActualCallTrace::returnUnsignedLongLongIntValueOrDefault(cpputest_ulonglong)
 {
     return 0;
 }
 
-long long int MockActualCallTrace::returnLongLongIntValueOrDefault(long long int)
+cpputest_longlong MockActualCallTrace::returnLongLongIntValueOrDefault(cpputest_longlong)
 {
     return returnLongLongIntValue();
 }
+
+#else
+
+cpputest_longlong MockActualCallTrace::returnLongLongIntValue()
+{
+    FAIL("Long Long type is not supported");
+    return cpputest_longlong(0);
+}
+
+cpputest_ulonglong MockActualCallTrace::returnUnsignedLongLongIntValue()
+{
+    FAIL("Unsigned Long Long type is not supported");
+    return cpputest_ulonglong(0);
+}
+
+cpputest_ulonglong MockActualCallTrace::returnUnsignedLongLongIntValueOrDefault(cpputest_ulonglong)
+{
+    FAIL("Unsigned Long Long type is not supported");
+    return cpputest_ulonglong(0);
+}
+
+cpputest_longlong MockActualCallTrace::returnLongLongIntValueOrDefault(cpputest_longlong)
+{
+    FAIL("Long Long type is not supported");
+    return cpputest_longlong(0);
+}
+
+#endif
 
 bool MockActualCallTrace::returnBoolValue()
 {

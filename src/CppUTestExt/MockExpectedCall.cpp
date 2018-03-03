@@ -125,7 +125,9 @@ MockExpectedCall& MockCheckedExpectedCall::withUnsignedLongIntParameter(const Si
     return *this;
 }
 
-MockExpectedCall& MockCheckedExpectedCall::withLongLongIntParameter(const SimpleString& name, long long int value)
+#ifdef CPPUTEST_USE_LONG_LONG
+
+MockExpectedCall& MockCheckedExpectedCall::withLongLongIntParameter(const SimpleString& name, cpputest_longlong value)
 {
     MockNamedValue* newParameter = new MockExpectedFunctionParameter(name);
     inputParameters_->add(newParameter);
@@ -133,13 +135,29 @@ MockExpectedCall& MockCheckedExpectedCall::withLongLongIntParameter(const Simple
     return *this;
 }
 
-MockExpectedCall& MockCheckedExpectedCall::withUnsignedLongLongIntParameter(const SimpleString& name, unsigned long long int value)
+MockExpectedCall& MockCheckedExpectedCall::withUnsignedLongLongIntParameter(const SimpleString& name, cpputest_ulonglong value)
 {
     MockNamedValue* newParameter = new MockExpectedFunctionParameter(name);
     inputParameters_->add(newParameter);
     newParameter->setValue(value);
     return *this;
 }
+
+#else
+
+MockExpectedCall& MockCheckedExpectedCall::withLongLongIntParameter(const SimpleString&, cpputest_longlong)
+{
+    FAIL("Long Long type is not supported");
+    return *this;
+}
+
+MockExpectedCall& MockCheckedExpectedCall::withUnsignedLongLongIntParameter(const SimpleString&, cpputest_ulonglong)
+{
+    FAIL("Unsigned Long Long type is not supported");
+    return *this;
+}
+
+#endif
 
 MockExpectedCall& MockCheckedExpectedCall::withDoubleParameter(const SimpleString& name, double value)
 {
@@ -483,19 +501,37 @@ MockExpectedCall& MockCheckedExpectedCall::andReturnValue(unsigned long int valu
     return *this;
 }
 
-MockExpectedCall& MockCheckedExpectedCall::andReturnValue(long long int value)
+#ifdef CPPUTEST_USE_LONG_LONG
+
+MockExpectedCall& MockCheckedExpectedCall::andReturnValue(cpputest_longlong value)
 {
     returnValue_.setName("returnValue");
     returnValue_.setValue(value);
     return *this;
 }
 
-MockExpectedCall& MockCheckedExpectedCall::andReturnValue(unsigned long long int value)
+MockExpectedCall& MockCheckedExpectedCall::andReturnValue(cpputest_ulonglong value)
 {
     returnValue_.setName("returnValue");
     returnValue_.setValue(value);
     return *this;
 }
+
+#else
+
+MockExpectedCall& MockCheckedExpectedCall::andReturnValue(cpputest_longlong)
+{
+    FAIL("Long Long type is not supported");
+    return *this;
+}
+
+MockExpectedCall& MockCheckedExpectedCall::andReturnValue(cpputest_ulonglong)
+{
+    FAIL("Unsigned Long Long type is not supported");
+    return *this;
+}
+
+#endif
 
 MockExpectedCall& MockCheckedExpectedCall::andReturnValue(const char* value)
 {

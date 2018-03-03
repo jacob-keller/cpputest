@@ -106,6 +106,8 @@ TEST(MockReturnValueTest, UnsignedIntReturnValueCanBeRetrievedAsUnsignedLongInt)
     UNSIGNED_LONGS_EQUAL(expected_value, mock().actualCall("foo").returnValue().getUnsignedLongIntValue());
 }
 
+#ifdef CPPUTEST_USE_LONG_LONG
+
 TEST(MockReturnValueTest, PositiveIntReturnValueCanBeRetrievedAsUnsignedLongLongInt)
 {
     int expected_value = 7;
@@ -133,6 +135,8 @@ TEST(MockReturnValueTest, UnsignedLongLongIntReturnValueCanBeRetrieved)
     mock().expectOneCall("foo").andReturnValue(expected_value);
     UNSIGNED_LONGLONGS_EQUAL(expected_value, mock().actualCall("foo").returnValue().getUnsignedLongLongIntValue());
 }
+
+#endif
 
 TEST(MockReturnValueTest, UnsignedIntegerReturnValueSetsDifferentValues)
 {

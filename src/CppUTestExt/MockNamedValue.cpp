@@ -76,17 +76,33 @@ void MockNamedValue::setValue(unsigned long int value)
     value_.unsignedLongIntValue_ = value;
 }
 
-void MockNamedValue::setValue(long long int value)
+#ifdef CPPUTEST_USE_LONG_LONG
+
+void MockNamedValue::setValue(cpputest_longlong value)
 {
     type_ = "long long int";
     value_.longLongIntValue_ = value;
 }
 
-void MockNamedValue::setValue(unsigned long long int value)
+void MockNamedValue::setValue(cpputest_ulonglong value)
 {
     type_ = "unsigned long long int";
     value_.unsignedLongLongIntValue_ = value;
 }
+
+#else
+
+void MockNamedValue::setValue(cpputest_longlong)
+{
+    FAIL("Long Long type is not supported");
+}
+
+void MockNamedValue::setValue(cpputest_ulonglong)
+{
+    FAIL("Unsigned Long Long type is not supported");
+}
+
+#endif
 
 void MockNamedValue::setValue(double value)
 {
@@ -218,7 +234,9 @@ unsigned long int MockNamedValue::getUnsignedLongIntValue() const
     }
 }
 
-long long int MockNamedValue::getLongLongIntValue() const
+#ifdef CPPUTEST_USE_LONG_LONG
+
+cpputest_longlong MockNamedValue::getLongLongIntValue() const
 {
     if(type_ == "int")
         return value_.intValue_;
@@ -235,7 +253,7 @@ long long int MockNamedValue::getLongLongIntValue() const
     }
 }
 
-unsigned long long int MockNamedValue::getUnsignedLongLongIntValue() const
+cpputest_ulonglong MockNamedValue::getUnsignedLongLongIntValue() const
 {
     if(type_ == "unsigned int")
         return value_.unsignedIntValue_;
@@ -253,6 +271,22 @@ unsigned long long int MockNamedValue::getUnsignedLongLongIntValue() const
         return value_.unsignedLongLongIntValue_;
     }
 }
+
+#else
+
+cpputest_longlong MockNamedValue::getLongLongIntValue() const
+{
+    FAIL("Long Long type is not supported");
+    return cpputest_longlong(0);
+}
+
+cpputest_ulonglong MockNamedValue::getUnsignedLongLongIntValue() const
+{
+    FAIL("Unsigned Long Long type is not supported");
+    return cpputest_ulonglong(0);
+}
+
+#endif
 
 double MockNamedValue::getDoubleValue() const
 {
@@ -341,6 +375,7 @@ bool MockNamedValue::equals(const MockNamedValue& p) const
         return (value_.longIntValue_ >= 0) && ((unsigned long)value_.longIntValue_ == p.value_.unsignedLongIntValue_);
     else if((type_ == "unsigned long int") && (p.type_ == "long int"))
         return (p.value_.longIntValue_ >= 0) && (value_.unsignedLongIntValue_ == (unsigned long) p.value_.longIntValue_);
+#ifdef CPPUTEST_USE_LONG_LONG
     else if ((type_ == "long long int") && (p.type_ == "int"))
         return value_.longLongIntValue_ == p.value_.intValue_;
     else if ((type_ == "int") && (p.type_ == "long long int"))
@@ -377,6 +412,7 @@ bool MockNamedValue::equals(const MockNamedValue& p) const
         return value_.unsignedLongLongIntValue_ == p.value_.unsignedLongIntValue_;
     else if ((type_ == "unsigned long int") && (p.type_ == "unsigned long long int"))
         return value_.unsignedLongIntValue_ == p.value_.unsignedLongLongIntValue_;
+#endif
 
     if (type_ != p.type_) return false;
 
@@ -390,10 +426,12 @@ bool MockNamedValue::equals(const MockNamedValue& p) const
         return value_.longIntValue_ == p.value_.longIntValue_;
     else if (type_ == "unsigned long int")
         return value_.unsignedLongIntValue_ == p.value_.unsignedLongIntValue_;
+#ifdef CPPUTEST_USE_LONG_LONG
     else if (type_ == "long long int")
         return value_.longLongIntValue_ == p.value_.longLongIntValue_;
     else if (type_ == "unsigned long long int")
         return value_.unsignedLongLongIntValue_ == p.value_.unsignedLongLongIntValue_;
+#endif
     else if (type_ == "const char*")
         return SimpleString(value_.stringValue_) == SimpleString(p.value_.stringValue_);
     else if (type_ == "void*")
@@ -440,10 +478,12 @@ SimpleString MockNamedValue::toString() const
         return StringFrom(value_.longIntValue_) + " " + BracketsFormattedHexStringFrom(value_.longIntValue_);
     else if (type_ == "unsigned long int")
         return StringFrom(value_.unsignedLongIntValue_) + " " + BracketsFormattedHexStringFrom(value_.unsignedLongIntValue_);
+#ifdef CPPUTEST_USE_LONG_LONG
     else if (type_ == "long long int")
         return StringFrom(value_.longLongIntValue_) + " " + BracketsFormattedHexStringFrom(value_.longLongIntValue_);
     else if (type_ == "unsigned long long int")
         return StringFrom(value_.unsignedLongLongIntValue_) + " " + BracketsFormattedHexStringFrom(value_.unsignedLongLongIntValue_);
+#endif
     else if (type_ == "const char*")
         return value_.stringValue_;
     else if (type_ == "void*")
