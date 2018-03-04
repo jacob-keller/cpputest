@@ -28,18 +28,20 @@
 #ifndef D_MockActualCall_h
 #define D_MockActualCall_h
 
+#include "CppUTest/CppUTestConfig.h"
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockNamedValue.h"
 #include "CppUTestExt/MockExpectedCallsList.h"
 
 class MockFailureReporter;
 class MockFailure;
+class MockActualCall;
 
-class MockActualCall
+class MockActualCallBase
 {
 public:
-    MockActualCall();
-    virtual ~MockActualCall();
+    MockActualCallBase();
+    virtual ~MockActualCallBase();
 
     virtual MockActualCall& withName(const SimpleString& name)=0;
     virtual MockActualCall& withCallOrder(unsigned int callOrder)=0;
@@ -48,8 +50,6 @@ public:
     MockActualCall& withParameter(const SimpleString& name, unsigned int value) { return withUnsignedIntParameter(name, value); }
     MockActualCall& withParameter(const SimpleString& name, long int value) { return withLongIntParameter(name, value); }
     MockActualCall& withParameter(const SimpleString& name, unsigned long int value) { return withUnsignedLongIntParameter(name, value); }
-    MockActualCall& withParameter(const SimpleString& name, long long int value) { return withLongLongIntParameter(name, value); }
-    MockActualCall& withParameter(const SimpleString& name, unsigned long long int value) { return withUnsignedLongLongIntParameter(name, value); }
     MockActualCall& withParameter(const SimpleString& name, double value) { return withDoubleParameter(name, value); }
     MockActualCall& withParameter(const SimpleString& name, const char* value) { return withStringParameter(name, value); }
     MockActualCall& withParameter(const SimpleString& name, void* value) { return withPointerParameter(name, value); }
@@ -65,8 +65,6 @@ public:
     virtual MockActualCall& withUnsignedIntParameter(const SimpleString& name, unsigned int value)=0;
     virtual MockActualCall& withLongIntParameter(const SimpleString& name, long int value)=0;
     virtual MockActualCall& withUnsignedLongIntParameter(const SimpleString& name, unsigned long int value)=0;
-    virtual MockActualCall& withLongLongIntParameter(const SimpleString& name, long long int value)=0;
-    virtual MockActualCall& withUnsignedLongLongIntParameter(const SimpleString& name, unsigned long long int value)=0;
     virtual MockActualCall& withDoubleParameter(const SimpleString& name, double value)=0;
     virtual MockActualCall& withStringParameter(const SimpleString& name, const char* value)=0;
     virtual MockActualCall& withPointerParameter(const SimpleString& name, void* value)=0;
@@ -89,12 +87,6 @@ public:
     virtual long int returnLongIntValue()=0;
     virtual long int returnLongIntValueOrDefault(long int default_value)=0;
 
-    virtual unsigned long long int returnUnsignedLongLongIntValue()=0;
-    virtual unsigned long long int returnUnsignedLongLongIntValueOrDefault(unsigned long long int default_value)=0;
-
-    virtual long long int returnLongLongIntValue()=0;
-    virtual long long int returnLongLongIntValueOrDefault(long long int default_value)=0;
-
     virtual unsigned int returnUnsignedIntValue()=0;
     virtual unsigned int returnUnsignedIntValueOrDefault(unsigned int default_value)=0;
 
@@ -114,6 +106,54 @@ public:
     virtual void (*returnFunctionPointerValueOrDefault(void (*default_value)()))()=0;
 
     virtual MockActualCall& onObject(const void* objectPtr)=0;
+};
+
+#if CPPUTEST_USE_LONG_LONG == 1
+
+class MockActualCallExtended : public MockActualCallBase
+{
+public:
+    MockActualCallExtended();
+    virtual ~MockActualCallExtended();
+
+    // These functions have to be repeated from parent class to avoid hiding them with new overloads
+    MockActualCall& withParameter(const SimpleString& name, bool value) { return withBoolParameter(name, value); }
+    MockActualCall& withParameter(const SimpleString& name, int value) { return withIntParameter(name, value); }
+    MockActualCall& withParameter(const SimpleString& name, unsigned int value) { return withUnsignedIntParameter(name, value); }
+    MockActualCall& withParameter(const SimpleString& name, long int value) { return withLongIntParameter(name, value); }
+    MockActualCall& withParameter(const SimpleString& name, unsigned long int value) { return withUnsignedLongIntParameter(name, value); }
+    MockActualCall& withParameter(const SimpleString& name, double value) { return withDoubleParameter(name, value); }
+    MockActualCall& withParameter(const SimpleString& name, const char* value) { return withStringParameter(name, value); }
+    MockActualCall& withParameter(const SimpleString& name, void* value) { return withPointerParameter(name, value); }
+    MockActualCall& withParameter(const SimpleString& name, void (*value)()) { return withFunctionPointerParameter(name, value); }
+    MockActualCall& withParameter(const SimpleString& name, const void* value) { return withConstPointerParameter(name, value); }
+    MockActualCall& withParameter(const SimpleString& name, const unsigned char* value, size_t size) { return withMemoryBufferParameter(name, value, size); }
+
+    // New overloads
+    MockActualCall& withParameter(const SimpleString& name, long long int value) { return withLongLongIntParameter(name, value); }
+    MockActualCall& withParameter(const SimpleString& name, unsigned long long int value) { return withUnsignedLongLongIntParameter(name, value); }
+
+    virtual MockActualCall& withLongLongIntParameter(const SimpleString& name, long long int value)=0;
+    virtual MockActualCall& withUnsignedLongLongIntParameter(const SimpleString& name, unsigned long long int value)=0;
+
+    virtual unsigned long long int returnUnsignedLongLongIntValue()=0;
+    virtual unsigned long long int returnUnsignedLongLongIntValueOrDefault(unsigned long long int default_value)=0;
+
+    virtual long long int returnLongLongIntValue()=0;
+    virtual long long int returnLongLongIntValueOrDefault(long long int default_value)=0;
+};
+
+#endif
+
+#if CPPUTEST_USE_LONG_LONG == 1
+class MockActualCall : public MockActualCallExtended
+#else
+class MockActualCall : public MockActualCallBase
+#endif
+{
+public:
+    MockActualCall() {};
+    virtual ~MockActualCall() {};
 };
 
 #endif

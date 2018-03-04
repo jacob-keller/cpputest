@@ -28,13 +28,25 @@
 #include "CppUTest/TestHarness.h"
 #include "CppUTestExt/MockCheckedExpectedCall.h"
 
-MockExpectedCall::MockExpectedCall()
+MockExpectedCallBase::MockExpectedCallBase()
 {
 }
 
-MockExpectedCall::~MockExpectedCall()
+MockExpectedCallBase::~MockExpectedCallBase()
 {
 }
+
+#if CPPUTEST_USE_LONG_LONG == 1
+
+MockExpectedCallExtended::MockExpectedCallExtended()
+{
+}
+
+MockExpectedCallExtended::~MockExpectedCallExtended()
+{
+}
+
+#endif
 
 SimpleString StringFrom(const MockNamedValue& parameter)
 {
@@ -125,6 +137,7 @@ MockExpectedCall& MockCheckedExpectedCall::withUnsignedLongIntParameter(const Si
     return *this;
 }
 
+#if CPPUTEST_USE_LONG_LONG == 1
 MockExpectedCall& MockCheckedExpectedCall::withLongLongIntParameter(const SimpleString& name, long long int value)
 {
     MockNamedValue* newParameter = new MockExpectedFunctionParameter(name);
@@ -140,6 +153,7 @@ MockExpectedCall& MockCheckedExpectedCall::withUnsignedLongLongIntParameter(cons
     newParameter->setValue(value);
     return *this;
 }
+#endif
 
 MockExpectedCall& MockCheckedExpectedCall::withDoubleParameter(const SimpleString& name, double value)
 {
@@ -483,6 +497,8 @@ MockExpectedCall& MockCheckedExpectedCall::andReturnValue(unsigned long int valu
     return *this;
 }
 
+#if CPPUTEST_USE_LONG_LONG == 1
+
 MockExpectedCall& MockCheckedExpectedCall::andReturnValue(long long int value)
 {
     returnValue_.setName("returnValue");
@@ -496,6 +512,8 @@ MockExpectedCall& MockCheckedExpectedCall::andReturnValue(unsigned long long int
     returnValue_.setValue(value);
     return *this;
 }
+
+#endif
 
 MockExpectedCall& MockCheckedExpectedCall::andReturnValue(const char* value)
 {

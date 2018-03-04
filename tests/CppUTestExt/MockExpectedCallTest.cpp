@@ -227,6 +227,8 @@ TEST(MockExpectedCall, callWithLongIntegerParameter)
     STRCMP_CONTAINS("funcName -> long int paramName: <777 (0x309)>", call->callToString().asCharString());
 }
 
+#if CPPUTEST_USE_LONG_LONG == 1
+
 TEST(MockExpectedCall, callWithUnsignedLongLongIntegerParameter)
 {
     const SimpleString paramName = "paramName";
@@ -248,6 +250,8 @@ TEST(MockExpectedCall, callWithLongLongIntegerParameter)
     CHECK(call->hasInputParameterWithName(paramName));
     STRCMP_CONTAINS("funcName -> long long int paramName: <777 (0x309)>", call->callToString().asCharString());
 }
+
+#endif
 
 TEST(MockExpectedCall, callWithDoubleParameter)
 {

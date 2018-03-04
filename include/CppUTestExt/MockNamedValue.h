@@ -27,6 +27,11 @@
 
 #ifndef D_MockNamedValue_h
 #define D_MockNamedValue_h
+
+#include "CppUTest/CppUTestConfig.h"
+
+class MockNamedValue;
+
 /*
  * MockNamedValueComparator is an interface that needs to be used when creating Comparators.
  * This is needed when comparing values of non-native type.
@@ -94,20 +99,18 @@ private:
  */
 
 class MockNamedValueComparatorsAndCopiersRepository;
-class MockNamedValue
+class MockNamedValueBase
 {
 public:
-    MockNamedValue(const SimpleString& name);
-    DEFAULT_COPY_CONSTRUCTOR(MockNamedValue)
-    virtual ~MockNamedValue();
+    MockNamedValueBase(const SimpleString& name);
+    DEFAULT_COPY_CONSTRUCTOR(MockNamedValueBase)
+    virtual ~MockNamedValueBase();
 
     virtual void setValue(bool value);
     virtual void setValue(int value);
     virtual void setValue(unsigned int value);
     virtual void setValue(long int value);
     virtual void setValue(unsigned long int value);
-    virtual void setValue(long long int value);
-    virtual void setValue(unsigned long long int value);
     virtual void setValue(double value);
     virtual void setValue(void* value);
     virtual void setValue(const void* value);
@@ -133,8 +136,6 @@ public:
     virtual unsigned int getUnsignedIntValue() const;
     virtual long int getLongIntValue() const;
     virtual unsigned long int getUnsignedLongIntValue() const;
-    virtual long long int getLongLongIntValue() const;
-    virtual unsigned long long int getUnsignedLongLongIntValue() const;
     virtual double getDoubleValue() const;
     virtual const char* getStringValue() const;
     virtual void* getPointerValue() const;
@@ -148,8 +149,7 @@ public:
     virtual MockNamedValueComparator* getComparator() const;
     virtual MockNamedValueCopier* getCopier() const;
 
-    static void setDefaultComparatorsAndCopiersRepository(MockNamedValueComparatorsAndCopiersRepository* repository);
-private:
+protected:
     SimpleString name_;
     SimpleString type_;
     union {
@@ -158,8 +158,10 @@ private:
         unsigned int unsignedIntValue_;
         long int longIntValue_;
         unsigned long int unsignedLongIntValue_;
+#if CPPUTEST_USE_LONG_LONG == 1
         long long int longLongIntValue_;
         unsigned long long int unsignedLongLongIntValue_;
+#endif
         double doubleValue_;
         const char* stringValue_;
         void* pointerValue_;
@@ -174,6 +176,51 @@ private:
     MockNamedValueComparator* comparator_;
     MockNamedValueCopier* copier_;
     static MockNamedValueComparatorsAndCopiersRepository* defaultRepository_;
+};
+
+#if CPPUTEST_USE_LONG_LONG == 1
+
+class MockNamedValueExtended : public MockNamedValueBase
+{
+public:
+    MockNamedValueExtended(const SimpleString& name);
+    DEFAULT_COPY_CONSTRUCTOR(MockNamedValueExtended)
+    virtual ~MockNamedValueExtended();
+
+    // These functions have to be repeated from parent class to avoid hiding them with new overloads
+    virtual void setValue(bool value) { MockNamedValueBase::setValue(value); }
+    virtual void setValue(int value) { MockNamedValueBase::setValue(value); }
+    virtual void setValue(unsigned int value) { MockNamedValueBase::setValue(value); }
+    virtual void setValue(long int value) { MockNamedValueBase::setValue(value); }
+    virtual void setValue(unsigned long int value) { MockNamedValueBase::setValue(value); }
+    virtual void setValue(double value) { MockNamedValueBase::setValue(value); }
+    virtual void setValue(void* value) { MockNamedValueBase::setValue(value); }
+    virtual void setValue(const void* value) { MockNamedValueBase::setValue(value); }
+    virtual void setValue(void (*value)()) { MockNamedValueBase::setValue(value); }
+    virtual void setValue(const char* value) { MockNamedValueBase::setValue(value); }
+
+    // New overloads
+    virtual void setValue(long long int value);
+    virtual void setValue(unsigned long long int value);
+
+    virtual long long int getLongLongIntValue() const;
+    virtual unsigned long long int getUnsignedLongLongIntValue() const;
+};
+
+#endif
+
+#if CPPUTEST_USE_LONG_LONG == 1
+class MockNamedValue : public MockNamedValueExtended
+#else
+class MockNamedValue : public MockNamedValueBase
+#endif
+{
+public:
+    MockNamedValue(const SimpleString& name);
+    DEFAULT_COPY_CONSTRUCTOR(MockNamedValue)
+    virtual ~MockNamedValue() {};
+
+    static void setDefaultComparatorsAndCopiersRepository(MockNamedValueComparatorsAndCopiersRepository* repository);
 };
 
 class MockNamedValueListNode
