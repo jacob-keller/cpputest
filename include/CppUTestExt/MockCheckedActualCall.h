@@ -44,8 +44,10 @@ public:
     virtual MockActualCall& withUnsignedIntParameter(const SimpleString& name, unsigned int value) _override;
     virtual MockActualCall& withLongIntParameter(const SimpleString& name, long int value) _override;
     virtual MockActualCall& withUnsignedLongIntParameter(const SimpleString& name, unsigned long int value) _override;
+#if CPPUTEST_USE_LONG_LONG == 1
     virtual MockActualCall& withLongLongIntParameter(const SimpleString& name, long long int value) _override;
     virtual MockActualCall& withUnsignedLongLongIntParameter(const SimpleString& name, unsigned long long int value) _override;
+#endif
     virtual MockActualCall& withDoubleParameter(const SimpleString& name, double value) _override;
     virtual MockActualCall& withStringParameter(const SimpleString& name, const char* value) _override;
     virtual MockActualCall& withPointerParameter(const SimpleString& name, void* value) _override;
@@ -71,11 +73,13 @@ public:
     virtual long int returnLongIntValue() _override;
     virtual long int returnLongIntValueOrDefault(long int default_value) _override;
 
+#if CPPUTEST_USE_LONG_LONG == 1
     virtual unsigned long long int returnUnsignedLongLongIntValue() _override;
     virtual unsigned long long int returnUnsignedLongLongIntValueOrDefault(unsigned long long int) _override;
 
     virtual long long int returnLongLongIntValue() _override;
     virtual long long int returnLongLongIntValueOrDefault(long long int default_value) _override;
+#endif
 
     virtual unsigned int returnUnsignedIntValue() _override;
     virtual unsigned int returnUnsignedIntValueOrDefault(unsigned int default_value) _override;
