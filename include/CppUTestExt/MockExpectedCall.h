@@ -139,8 +139,8 @@ class MockExpectedCall : public MockExpectedCallBase
 #endif
 {
 public:
-    MockExpectedCall() {};
-    virtual ~MockExpectedCall() {};
+    MockExpectedCall() {}
+    virtual ~MockExpectedCall() {}
 };
 
 #endif

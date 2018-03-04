@@ -188,16 +188,16 @@ public:
     virtual ~MockNamedValueExtended();
 
     // These functions have to be repeated from parent class to avoid hiding them with new overloads
-    virtual void setValue(bool value) { MockNamedValueBase::setValue(value); };
-    virtual void setValue(int value) { MockNamedValueBase::setValue(value); };
-    virtual void setValue(unsigned int value) { MockNamedValueBase::setValue(value); };
-    virtual void setValue(long int value) { MockNamedValueBase::setValue(value); };
-    virtual void setValue(unsigned long int value) { MockNamedValueBase::setValue(value); };
-    virtual void setValue(double value) { MockNamedValueBase::setValue(value); };
-    virtual void setValue(void* value) { MockNamedValueBase::setValue(value); };
-    virtual void setValue(const void* value) { MockNamedValueBase::setValue(value); };
-    virtual void setValue(void (*value)()) { MockNamedValueBase::setValue(value); };
-    virtual void setValue(const char* value) { MockNamedValueBase::setValue(value); };
+    virtual void setValue(bool value) { MockNamedValueBase::setValue(value); }
+    virtual void setValue(int value) { MockNamedValueBase::setValue(value); }
+    virtual void setValue(unsigned int value) { MockNamedValueBase::setValue(value); }
+    virtual void setValue(long int value) { MockNamedValueBase::setValue(value); }
+    virtual void setValue(unsigned long int value) { MockNamedValueBase::setValue(value); }
+    virtual void setValue(double value) { MockNamedValueBase::setValue(value); }
+    virtual void setValue(void* value) { MockNamedValueBase::setValue(value); }
+    virtual void setValue(const void* value) { MockNamedValueBase::setValue(value); }
+    virtual void setValue(void (*value)()) { MockNamedValueBase::setValue(value); }
+    virtual void setValue(const char* value) { MockNamedValueBase::setValue(value); }
 
     // New overloads
     virtual void setValue(long long int value);
